@@ -43,16 +43,27 @@ data/*.tiff
 data/*.tif
 data/*.png
 data/*.jpg
-!data/samples/  # Keep sample data
+!data/.gitkeep
+!data/samples/
 
 # Model outputs
 runs/
 *.pt
 !models/yolo11s_tci.pt  # Keep trained model
 
+# Detection outputs
+*.geojson
+vessels.geojson
+toulon_vessels_map.html
+
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+
+# Coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
 
 # OS
 .DS_Store

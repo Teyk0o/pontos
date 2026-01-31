@@ -27,15 +27,18 @@ class VesselDetector:
             confidence_threshold: Minimum confidence for detections
         """
         self.model_path = model_path or config.model_path
-        self.device = device or config.device
         self.confidence_threshold = confidence_threshold
+
+        # Smart device selection with fallback
+        requested_device = device or config.device
+        if requested_device != "cpu" and not torch.cuda.is_available():
+            print(f"GPU requested but not available. Falling back to CPU.")
+            self.device = "cpu"
+        else:
+            self.device = requested_device
 
         # Load model
         self.model = YOLO(str(self.model_path))
-
-        # Verify GPU availability
-        if self.device != "cpu" and not torch.cuda.is_available():
-            raise RuntimeError("GPU device requested but CUDA not available")
 
     def detect(
             self,

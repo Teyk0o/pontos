@@ -22,9 +22,9 @@ class SentinelDataSource:
     """Sentinel-2 L1C data acquisition client."""
 
     def __init__(
-        self,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None
+            self,
+            client_id: Optional[str] = None,
+            client_secret: Optional[str] = None
     ):
         """
         Initialize Sentinel Hub client.
@@ -34,9 +34,19 @@ class SentinelDataSource:
             client_secret: Sentinel Hub OAuth client secret
         """
         self.sh_config = SHConfig()
-        self.sh_config.sh_client_id = client_id or config.sentinel_client_id
-        self.sh_config.sh_client_secret = client_secret or config.sentinel_client_secret
 
+        # Use provided credentials, or fallback to config
+        if client_id is not None:
+            self.sh_config.sh_client_id = client_id
+        else:
+            self.sh_config.sh_client_id = config.sentinel_client_id
+
+        if client_secret is not None:
+            self.sh_config.sh_client_secret = client_secret
+        else:
+            self.sh_config.sh_client_secret = config.sentinel_client_secret
+
+        # Validate credentials
         if not self.sh_config.sh_client_id or not self.sh_config.sh_client_secret:
             raise ValueError("Sentinel Hub credentials not configured")
 
