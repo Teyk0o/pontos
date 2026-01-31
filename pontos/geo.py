@@ -1,10 +1,8 @@
 """Geospatial utilities for coordinate transformations and exports."""
+
 import json
 from pathlib import Path
-from typing import List, Dict, Tuple
-
-import numpy as np
-from pyproj import Transformer
+from typing import List, Tuple
 
 
 class GeoExporter:
@@ -12,10 +10,10 @@ class GeoExporter:
 
     @staticmethod
     def detections_to_geojson(
-            detections: List[dict],
-            bbox: Tuple[float, float, float, float],
-            image_size: Tuple[int, int],
-            output_path: Path
+        detections: List[dict],
+        bbox: Tuple[float, float, float, float],
+        image_size: Tuple[int, int],
+        output_path: Path,
     ) -> Path:
         """
         Convert pixel-based detections to GeoJSON with geographic coordinates.
@@ -34,28 +32,20 @@ class GeoExporter:
         for idx, detection in enumerate(detections):
             # Convert pixel coordinates to geographic coordinates
             cx_px, cy_px = detection["center"]
-            lon, lat = GeoExporter._pixel_to_geo(
-                cx_px, cy_px, bbox, image_size
-            )
+            lon, lat = GeoExporter._pixel_to_geo(cx_px, cy_px, bbox, image_size)
 
             feature = {
                 "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [lon, lat]
-                },
+                "geometry": {"type": "Point", "coordinates": [lon, lat]},
                 "properties": {
                     "id": idx,
                     "confidence": detection["confidence"],
-                    "class": detection.get("class", "vessel")
-                }
+                    "class": detection.get("class", "vessel"),
+                },
             }
             features.append(feature)
 
-        geojson = {
-            "type": "FeatureCollection",
-            "features": features
-        }
+        geojson = {"type": "FeatureCollection", "features": features}
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as f:
@@ -65,10 +55,10 @@ class GeoExporter:
 
     @staticmethod
     def _pixel_to_geo(
-            x_px: float,
-            y_px: float,
-            bbox: Tuple[float, float, float, float],
-            image_size: Tuple[int, int]
+        x_px: float,
+        y_px: float,
+        bbox: Tuple[float, float, float, float],
+        image_size: Tuple[int, int],
     ) -> Tuple[float, float]:
         """
         Convert pixel coordinates to geographic coordinates.

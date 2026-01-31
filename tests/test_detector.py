@@ -1,4 +1,5 @@
 """Tests for vessel detector module."""
+
 import pytest
 import torch
 from pathlib import Path
@@ -17,7 +18,7 @@ def test_detector_initialization():
 
 def test_detector_cpu_fallback():
     """Test CPU fallback when GPU not available."""
-    with patch('torch.cuda.is_available', return_value=False):
+    with patch("torch.cuda.is_available", return_value=False):
         detector = VesselDetector(device="0")
         assert detector.device == "cpu"
 
@@ -36,8 +37,9 @@ def test_detector_custom_threshold():
     assert detector.confidence_threshold == 0.25
 
 
-@pytest.mark.skipif(not Path("models/yolo11s_tci.pt").exists(),
-                    reason="YOLO model not found")
+@pytest.mark.skipif(
+    not Path("models/yolo11s_tci.pt").exists(), reason="YOLO model not found"
+)
 def test_detect_sample_image(sample_image):
     """Test detection on sample image."""
     detector = VesselDetector(confidence_threshold=0.01)
@@ -53,8 +55,10 @@ def test_detect_sample_image(sample_image):
         assert 0 <= det["confidence"] <= 1
 
 
-@pytest.mark.skipif(not Path("data/samples/toulon_l1c.png").exists(),
-                    reason="Toulon test image not found")
+@pytest.mark.skipif(
+    not Path("data/samples/toulon_l1c.png").exists(),
+    reason="Toulon test image not found",
+)
 def test_detect_toulon_image(toulon_image):
     """Test detection on real Toulon image."""
     if toulon_image is None:
@@ -68,16 +72,16 @@ def test_detect_toulon_image(toulon_image):
 
     # Check detection quality
     assert all(0 <= d["confidence"] <= 1 for d in detections)
-    assert any(d["confidence"] > 0.3 for d in detections)  # At least one high-confidence
+    assert any(
+        d["confidence"] > 0.3 for d in detections
+    )  # At least one high-confidence
 
 
 def test_detect_with_visualization(sample_image, tmp_path):
     """Test detection with visualization saved."""
     detector = VesselDetector()
     detections = detector.detect(
-        sample_image,
-        save_visualization=True,
-        output_dir=tmp_path / "test_results"
+        sample_image, save_visualization=True, output_dir=tmp_path / "test_results"
     )
 
     assert isinstance(detections, list)
@@ -94,8 +98,9 @@ def test_get_device_name():
     assert len(device_name) > 0
 
 
-@pytest.mark.skipif(not Path("models/yolo11s_tci.pt").exists(),
-                    reason="YOLO model not found")
+@pytest.mark.skipif(
+    not Path("models/yolo11s_tci.pt").exists(), reason="YOLO model not found"
+)
 def test_detect_no_detections(tmp_path):
     """Test detection when no vessels found."""
     # Create blank image
@@ -151,18 +156,15 @@ def test_detect_invalid_image_path():
         detector.detect(Path("nonexistent_image.png"))
 
 
-@pytest.mark.skipif(not Path("models/yolo11s_tci.pt").exists(),
-                    reason="YOLO model not found")
+@pytest.mark.skipif(
+    not Path("models/yolo11s_tci.pt").exists(), reason="YOLO model not found"
+)
 def test_detect_visualization_output_dir(sample_image, tmp_path):
     """Test that visualization is saved to correct directory."""
     detector = VesselDetector()
 
     output_dir = tmp_path / "custom_output"
-    detections = detector.detect(
-        sample_image,
-        save_visualization=True,
-        output_dir=output_dir
-    )
+    _ = detector.detect(sample_image, save_visualization=True, output_dir=output_dir)
 
     # Check output directory was created
     assert output_dir.exists()

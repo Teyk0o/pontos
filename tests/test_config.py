@@ -1,4 +1,5 @@
 """Tests for configuration module."""
+
 import pytest
 from pontos.config import PontosConfig
 

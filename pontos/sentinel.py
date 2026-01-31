@@ -1,4 +1,5 @@
 """Sentinel-2 L1C data acquisition via Sentinel Hub API."""
+
 from datetime import datetime
 from pathlib import Path
 from typing import Tuple, Optional
@@ -12,7 +13,7 @@ from sentinelhub import (
     BBox,
     CRS,
     MimeType,
-    MosaickingOrder
+    MosaickingOrder,
 )
 
 from pontos.config import config
@@ -22,9 +23,7 @@ class SentinelDataSource:
     """Sentinel-2 L1C data acquisition client."""
 
     def __init__(
-            self,
-            client_id: Optional[str] = None,
-            client_secret: Optional[str] = None
+        self, client_id: Optional[str] = None, client_secret: Optional[str] = None
     ):
         """
         Initialize Sentinel Hub client.
@@ -56,7 +55,7 @@ class SentinelDataSource:
         time_range: Tuple[str, str],
         size: int = 1024,  # Fixed size like prototype
         max_cloud_coverage: float = 0.2,
-        output_path: Optional[Path] = None
+        output_path: Optional[Path] = None,
     ) -> Path:
         """
         Download Sentinel-2 L1C RGB scene (Top of Atmosphere).
@@ -86,15 +85,13 @@ class SentinelDataSource:
                     data_collection=DataCollection.SENTINEL2_L1C,
                     time_interval=time_range,
                     mosaicking_order=MosaickingOrder.LEAST_CC,
-                    maxcc=max_cloud_coverage
+                    maxcc=max_cloud_coverage,
                 )
             ],
-            responses=[
-                SentinelHubRequest.output_response("default", MimeType.PNG)
-            ],
+            responses=[SentinelHubRequest.output_response("default", MimeType.PNG)],
             bbox=bbox_obj,
             size=[size, size],  # Fixed square size
-            config=self.sh_config
+            config=self.sh_config,
         )
 
         # Execute request

@@ -1,4 +1,5 @@
 """Tests for geospatial utilities."""
+
 import json
 from pontos.geo import GeoExporter
 
@@ -6,9 +7,10 @@ from pontos.geo import GeoExporter
 def test_pixel_to_geo_center(toulon_bbox):
     """Test pixel to geographic coordinate conversion (center)."""
     lon, lat = GeoExporter._pixel_to_geo(
-        x_px=512, y_px=512,  # Center of 1024x1024
+        x_px=512,
+        y_px=512,  # Center of 1024x1024
         bbox=toulon_bbox,
-        image_size=(1024, 1024)
+        image_size=(1024, 1024),
     )
 
     # Should be near center of bbox
@@ -40,7 +42,7 @@ def test_detections_to_geojson(sample_detections, toulon_bbox, tmp_path):
         detections=sample_detections,
         bbox=toulon_bbox,
         image_size=(1024, 1024),
-        output_path=output_path
+        output_path=output_path,
     )
 
     assert result == output_path

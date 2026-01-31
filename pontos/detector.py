@@ -1,8 +1,8 @@
 """Ship detection using YOLO11s marine vessel model."""
-from pathlib import Path
-from typing import List, Tuple, Optional
 
-import numpy as np
+from pathlib import Path
+from typing import List, Optional
+
 import torch
 from ultralytics import YOLO
 
@@ -13,10 +13,10 @@ class VesselDetector:
     """YOLO11s-based vessel detector for Sentinel-2 imagery."""
 
     def __init__(
-            self,
-            model_path: Optional[Path] = None,
-            device: Optional[str] = None,
-            confidence_threshold: float = 0.05
+        self,
+        model_path: Optional[Path] = None,
+        device: Optional[str] = None,
+        confidence_threshold: float = 0.05,
     ):
         """
         Initialize vessel detector.
@@ -32,7 +32,7 @@ class VesselDetector:
         # Smart device selection with fallback
         requested_device = device or config.device
         if requested_device != "cpu" and not torch.cuda.is_available():
-            print(f"GPU requested but not available. Falling back to CPU.")
+            print("GPU requested but not available. Falling back to CPU.")
             self.device = "cpu"
         else:
             self.device = requested_device
@@ -41,10 +41,10 @@ class VesselDetector:
         self.model = YOLO(str(self.model_path))
 
     def detect(
-            self,
-            image_path: Path,
-            save_visualization: bool = False,
-            output_dir: Optional[Path] = None
+        self,
+        image_path: Path,
+        save_visualization: bool = False,
+        output_dir: Optional[Path] = None,
     ) -> List[dict]:
         """
         Detect vessels in a single image.
@@ -63,7 +63,7 @@ class VesselDetector:
             device=self.device,
             save=save_visualization,
             project=str(output_dir) if output_dir else None,
-            verbose=False
+            verbose=False,
         )
 
         detections = []
@@ -72,20 +72,19 @@ class VesselDetector:
             confidence = float(box.conf[0])
             class_id = int(box.cls[0])
 
-            detections.append({
-                "bbox": [float(x1), float(y1), float(x2), float(y2)],
-                "confidence": confidence,
-                "class": self.model.names[class_id],
-                "center": [float((x1 + x2) / 2), float((y1 + y2) / 2)]
-            })
+            detections.append(
+                {
+                    "bbox": [float(x1), float(y1), float(x2), float(y2)],
+                    "confidence": confidence,
+                    "class": self.model.names[class_id],
+                    "center": [float((x1 + x2) / 2), float((y1 + y2) / 2)],
+                }
+            )
 
         return detections
 
     def detect_tiled(
-            self,
-            image_path: Path,
-            tile_size: int = 320,
-            overlap: float = 0.5
+        self, image_path: Path, tile_size: int = 320, overlap: float = 0.5
     ) -> List[dict]:
         """
         Detect vessels using sliding window tiling strategy.

@@ -1,6 +1,6 @@
 """Pytest configuration and shared fixtures."""
+
 import os
-import sys
 import pytest
 from pathlib import Path
 import numpy as np
@@ -20,7 +20,11 @@ def mock_env_vars(monkeypatch):
     """Mock environment variables for testing."""
     # Clear all pontos-related env vars first
     for key in list(os.environ.keys()):
-        if key.startswith("SH_") or key in ["DEVICE", "MODEL_PATH", "CONFIDENCE_THRESHOLD"]:
+        if key.startswith("SH_") or key in [
+            "DEVICE",
+            "MODEL_PATH",
+            "CONFIDENCE_THRESHOLD",
+        ]:
             monkeypatch.delenv(key, raising=False)
 
     # Set test defaults
@@ -64,14 +68,14 @@ def sample_detections():
             "bbox": [100.0, 200.0, 150.0, 250.0],
             "confidence": 0.58,
             "class": "vessel",
-            "center": [125.0, 225.0]
+            "center": [125.0, 225.0],
         },
         {
             "bbox": [300.0, 400.0, 350.0, 450.0],
             "confidence": 0.41,
             "class": "vessel",
-            "center": [325.0, 425.0]
-        }
+            "center": [325.0, 425.0],
+        },
     ]
 
 
@@ -92,7 +96,7 @@ def create_toulon_symlink():
         Path("data/samples/toulon_l1c.png"),
         Path("data/toulon_l1c.png"),
         Path("data/toulon_sentinel2.tiff"),
-        Path("runs/toulon/predict/toulon_sentinel2.jpg")
+        Path("runs/toulon/predict/toulon_sentinel2.jpg"),
     ]
 
     for src in sources:
@@ -101,10 +105,12 @@ def create_toulon_symlink():
             if not dst.exists():
                 # Copy instead of symlink for cross-platform
                 import shutil
+
                 shutil.copy(src, dst)
             return dst
 
     return None
+
 
 @pytest.fixture(scope="session")
 def toulon_image(create_toulon_symlink):

@@ -1,4 +1,5 @@
 """Command-line interface for Pontos."""
+
 import click
 from pathlib import Path
 from pontos.detector import VesselDetector
@@ -13,14 +14,16 @@ def cli():
 
 
 @cli.command()
-@click.option('--bbox', required=True, help='Bounding box: min_lon,min_lat,max_lon,max_lat')
-@click.option('--date-start', required=True, help='Start date: YYYY-MM-DD')
-@click.option('--date-end', required=True, help='End date: YYYY-MM-DD')
-@click.option('--output', '-o', default='vessels.geojson', help='Output GeoJSON path')
-@click.option('--conf', default=0.05, help='Confidence threshold')
+@click.option(
+    "--bbox", required=True, help="Bounding box: min_lon,min_lat,max_lon,max_lat"
+)
+@click.option("--date-start", required=True, help="Start date: YYYY-MM-DD")
+@click.option("--date-end", required=True, help="End date: YYYY-MM-DD")
+@click.option("--output", "-o", default="vessels.geojson", help="Output GeoJSON path")
+@click.option("--conf", default=0.05, help="Confidence threshold")
 def scan(bbox, date_start, date_end, output, conf):
     """Scan area of interest for vessels."""
-    bbox_coords = tuple(map(float, bbox.split(',')))
+    bbox_coords = tuple(map(float, bbox.split(",")))
 
     click.echo(f"Scanning {bbox_coords}...")
 
@@ -41,5 +44,5 @@ def scan(bbox, date_start, date_end, output, conf):
     click.echo(f"Saved: {output}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

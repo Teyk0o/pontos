@@ -1,4 +1,5 @@
 """Configuration management for Pontos ship detection system."""
+
 import os
 from dataclasses import dataclass
 from pathlib import Path
