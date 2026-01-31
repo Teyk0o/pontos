@@ -15,6 +15,7 @@ setup(
         "pillow",
         "pyproj",
         "shapely",
+        "python-dotenv",
     ],
     entry_points={
         "console_scripts": [
