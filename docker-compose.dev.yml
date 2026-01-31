@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  pontos-dev:
+    build:
+      context: docker
+      dockerfile: docker/Dockerfile
+    image: pontos:dev
+    container_name: pontos-dev
+    environment:
+      - SH_CLIENT_ID=${SH_CLIENT_ID}
+      - SH_CLIENT_SECRET=${SH_CLIENT_SECRET}
+      - DEVICE=cpu
+    volumes:
+      - .:/app  # Mount tout le code pour live reload
+      - ./data:/app/data
+      - ./runs:/app/runs
+    command: bash
+    stdin_open: true
+    tty: true

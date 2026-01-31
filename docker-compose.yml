@@ -1,0 +1,31 @@
+services:
+  pontos:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: pontos:latest
+    container_name: pontos
+    environment:
+      - SH_CLIENT_ID=${SH_CLIENT_ID}
+      - SH_CLIENT_SECRET=${SH_CLIENT_SECRET}
+      - DEVICE=cpu
+      - CONFIDENCE_THRESHOLD=0.05
+      - YOLO_CONFIG_DIR=/app/.config/Ultralytics
+    volumes:
+      - ./data:/app/data
+      - ./runs:/app/runs
+      - ultralytics_config:/app/.config/Ultralytics
+    command:
+      - scan
+      - --bbox
+      - "5.85,43.08,6.05,43.18"
+      - --date-start
+      - "2026-01-01"
+      - --date-end
+      - "2026-01-31"
+      - --output
+      - /app/runs/vessels.geojson
+    restart: unless-stopped
+
+volumes:
+  ultralytics_config:

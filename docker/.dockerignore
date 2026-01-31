@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+tests/
+
+# Data (mounted as volumes)
+data/*.tiff
+data/*.png
+data/*.jpg
+runs/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# CI/CD
+.github/
+
+# Docs
+docs/
+*.md
+!README.md
+
+# Environment
+.env
+!.env.example
