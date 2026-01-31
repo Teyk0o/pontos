@@ -49,10 +49,6 @@ data/*.jpg
 # Model outputs
 runs/
 
-# Models
-models/*.pt
-!models/download_model.py
-
 # Detection outputs
 *.geojson
 vessels.geojson

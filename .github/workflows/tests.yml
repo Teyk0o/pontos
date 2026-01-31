@@ -37,10 +37,6 @@ jobs:
         pip install pytest pytest-cov pytest-mock
         pip install -e .
 
-    - name: Download YOLO model
-      run: |
-        python models/download_model.py
-
     - name: Verify model exists
       run: |
         test -f models/yolo11s_tci.pt || exit 1
